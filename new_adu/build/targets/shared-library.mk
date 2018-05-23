@@ -20,7 +20,7 @@ $(TARGET):	$(OBJS) $(ARLIBS)
 ## 定义 目标clean，一般就是删除所有obj文件，以及可执行文件。
 .PHONY: $(TARGET).clean
 $(TARGET).clean:
-	$(RM) $(TARGET) $(OBJS) $(DEPS) $(BUILD_INC_PATH)/* /usr/lib/liboal_hal.so
+	$(RMDIR) $(TARGET) $(OBJS) $(DEPS) $(BUILD_INC_PATH)/* /usr/lib/liboal_hal.so
 
 .PHONY: $(TARGET).distclean
 $(TARGET).distclean:

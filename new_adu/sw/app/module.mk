@@ -22,9 +22,11 @@ include $(BUILD_CONFIGURE)
 
 
  LDLIBS := \
-           sw/osal_hal/liboal_hal.a
+           sw/osal_hal/liboal_hal.a \
+           lib/libxml2.a \
 
-SRC_FILES:= $(MODULE_PATH)/src/main.cpp \
+SRC_FILES:= lib/test/b.cpp \
+			#$(MODULE_PATH)/src/uart_test.cpp \
 			#$(MODULE_PATH)/src/cgi/cgic.c
 
 ## 定义了如何生成可执行文件的通用规则

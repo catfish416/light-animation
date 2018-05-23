@@ -35,6 +35,7 @@ SRC_FILES:=  $(MODULE_PATH)/src/CLinuxCountingSem.cpp\
              $(MODULE_PATH)/src/CRC8.c\
              $(MODULE_PATH)/src/select_timer.cpp\
 			 $(MODULE_PATH)/src/hal_can.c\
+			 $(MODULE_PATH)/src/hal_uart.cpp\
              \
 
 ## 定义了如何生成可执行文件的通用规则
