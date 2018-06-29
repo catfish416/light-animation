@@ -9,6 +9,10 @@ extern "C" {
 
 #define S_TIMEOUT 1
 
+#define RAUD_115200 B115200
+#define RAUD_500000 B500000
+
+int serial_fd = -1;
 
 //打开串口并初始化设置
 
@@ -17,8 +21,15 @@ extern "C" {
 * return: fd 
 */
 int init_uart(void) 
-{ 
-    int serial_fd = open(DEVICE, O_RDWR | O_NOCTTY | O_NDELAY); 
+{
+
+    if (serial_fd > 0) { // 串口已经打开，避免重复初始化
+        tcflush(serial_fd, TCIOFLUSH);//溢出数据可以接收，但不读 
+        return serial_fd;
+    }
+
+    
+    serial_fd = open(DEVICE, O_RDWR | O_NOCTTY | O_NDELAY); 
     if (serial_fd < 0) { 
         perror("open"); 
         return -1; 
@@ -40,12 +51,16 @@ int init_uart(void)
     options.c_iflag |= IGNPAR;//无奇偶检验位 
     options.c_oflag = 0; //输出模式 
     options.c_lflag = 0; //不激活终端模式 
-    cfsetospeed(&options, B115200);//设置波特率 
-      
+
+    tcflush(serial_fd, TCIOFLUSH);
+    cfsetispeed(&options, RAUD_500000);//设置波特率 
+    cfsetospeed(&options, RAUD_500000);
+    
     /**3. 设置新属性，TCSANOW：所有改变立即生效*/ 
-    tcflush(serial_fd, TCIFLUSH);//溢出数据可以接收，但不读 
-    tcsetattr(serial_fd, TCSANOW, &options); 
-      
+    
+    tcsetattr(serial_fd, TCSANOW, &options);
+    tcflush(serial_fd, TCIOFLUSH);//溢出数据可以接收，但不读 
+
     return serial_fd; 
 } 
   
@@ -56,19 +71,33 @@ int init_uart(void)
 *@datalen:数据长度 
 */ 
 unsigned int total_send = 0 ;
-int uart_send(int fd, char *data, int datalen) 
-{ 
-    int len = 0; 
+int uart_send(int fd, uint8_t *data, int datalen) 
+{
+    if (fd < 0)
+    {
+        printf("fd is %d\n", fd);
+        return -1;
+    }
+/*
+    for (int i = 0; i < datalen; i++)
+    {
+        printf("sent data[%d]: 0x%x\n", i, data[i]);
+    }
+*/
+
+//    tcflush(fd, TCIOFLUSH);
+
+    int len = 0;
     len = write(fd, data, datalen);//实际写入的长度 
     if(len == datalen) { 
         total_send += len ;
-        printf("total_send is %d\n",total_send); 
+        //printf("total_send is %d\n",total_send); 
         return len; 
     } else { 
         //tcflush(fd, TCOFLUSH);//TCOFLUSH刷新写入的数据但不传送 
         return -1; 
     }
-    tcflush(fd, TCOFLUSH);
+    tcflush(fd, TCIOFLUSH);  //数据发送后，返回消息不处理，丢弃
 
     return 0; 
 } 
@@ -78,7 +107,7 @@ int uart_send(int fd, char *data, int datalen)
 *要求启动后，在pc端发送ascii文件 
 */
 unsigned int total_length = 0 ; 
-int uart_recv(int fd, char *data, int datalen) 
+int uart_recv(int fd, uint8_t *data, int datalen) 
 { 
     int len=0, ret = 0; 
     fd_set fs_read; 
@@ -110,6 +139,7 @@ int uart_recv(int fd, char *data, int datalen)
       
     return 0; 
 } 
+
 
 #ifdef __cplusplus
 }

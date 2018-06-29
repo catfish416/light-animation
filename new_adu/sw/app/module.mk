@@ -25,7 +25,8 @@ include $(BUILD_CONFIGURE)
            sw/osal_hal/liboal_hal.a \
            lib/libxml2.a \
 
-SRC_FILES:= lib/test/b.cpp \
+SRC_FILES:= sw/osal_hal/test/libxml_test.cpp \
+			#lib/test/b.cpp \
 			#$(MODULE_PATH)/src/uart_test.cpp \
 			#$(MODULE_PATH)/src/cgi/cgic.c
 

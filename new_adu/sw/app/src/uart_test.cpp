@@ -20,20 +20,20 @@ int main(int argc, char **argv)
     char buf_r[RD_LEN] ; 
     memset(buf_r, 0, sizeof(char)*RD_LEN); 
 
-    uart_send(serial_fd, buf_w, strlen(buf_w));
+//    uart_send(serial_fd, buf_w, strlen(buf_w));
     //printf("\n");
-/*
+
     while(1)
     {
-        uart_send(serial_fd, buf, strlen(buf)); 
+        uart_send(serial_fd, buf_w, strlen(buf_w)); 
         printf("\n"); 
         sleep(1);
         //if(uart_recv(serial_fd, buf1, 11) > 0)
         uart_recv(serial_fd, buf_r, RD_LEN);
         printf("receive: %s\n", buf_r);
-        memset(buf1, 0, sizeof(char)*RD_LEN); 
+        memset(buf_r, 0, sizeof(char)*RD_LEN); 
     }
-*/
+
     close(serial_fd); 
     return 0; 
 }

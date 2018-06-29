@@ -20,8 +20,8 @@
 * THE POSSIBILITY OF SUCH DAMAGE.
 *
 ****************************************************************************/
-#ifndef _HAL_CAN_H
-#define _HAL_CAN_H
+#ifndef _HAL_UART_H
+#define _HAL_UART_H
 
 #include <stdio.h> 
 #include <stdlib.h> 
@@ -33,7 +33,7 @@
 #include <errno.h> 
 #include <unistd.h>
 #include <string.h>
-
+#include "resue.h"
 /** 
 *初始化串口函数
 * return: fd 
@@ -46,7 +46,7 @@ int init_uart(void);
 *@data:待发送数据 
 *@datalen:数据长度 
 */ 
-int uart_send(int fd, char *data, int datalen);
+int uart_send(int fd, uint8_t *data, int datalen);
 
 /** 
 *串口接收数据
@@ -54,7 +54,7 @@ int uart_send(int fd, char *data, int datalen);
 *@data:接收数据缓存地址
 *@datalen:数据长度
 */ 
-int uart_recv(int fd, char *data, int datalen);
+int uart_recv(int fd, uint8_t *data, int datalen);
 
 
 #endif //_CAN_RECTEST_API_H_
